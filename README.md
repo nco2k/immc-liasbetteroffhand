@@ -6,7 +6,7 @@ Ever been eating food and then suddenly half a stack of fireworks has hit the ci
 In vanilla, if you hold right click to use an item in your main hand, like eating food, the offhand item will activate as soon as the main hand action completes, even if you're still holding the button down. This mod blocks the offhand from activating until you release and re-press right click.
 
 This applies to:
-- **Hold right click items:** food, potions, bows, crossbows, shields, spyglass, trident, spear, goat horn, and any other item with a use animation
+- **Hold right click items:** food, potions, crossbows, shields, spyglass, trident, spear, goat horn, and any other item with a use animation
 - **Instant use items:** snowballs, eggs, ender pearls, splash potions, fireworks, and any other item that consumes from a stack on use
 - **Any items that break while being used**
 
