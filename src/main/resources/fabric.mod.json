@@ -11,7 +11,7 @@
 		"homepage": "https://www.immortalmc.net/",
 		"sources": "https://github.com/LiaHowie/immc-liasbetteroffhand"
 	},
-	"license": "CC0-1.0",
+	"license": "GPL-3.0-or-later",
 	"icon": "assets/lias-better-offhand/icon.png",
 	"environment": "*",
 	"entrypoints": {
