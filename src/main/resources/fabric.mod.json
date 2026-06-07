@@ -3,7 +3,7 @@
 	"id": "lias-better-offhand",
 	"version": "${version}",
 	"name": "Lia's Better Offhand",
-	"description": "Disables offhand item use while holding a consumable in the main hand.",
+	"description": "Disables offhand item use while using an item in the main hand.",
 	"authors": [
 		"Lia Howie"
 	],
