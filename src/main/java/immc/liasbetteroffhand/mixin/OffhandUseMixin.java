@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(net.minecraft.client.multiplayer.MultiPlayerGameMode.class)
 public class OffhandUseMixin {
 
-    private boolean blockOffhandUntilRelease = false; // Main control flag for whether the offhand should be blocked
+    private boolean blockOffhandUse = false; // Tracks whether the offhand should be blocked or not
 	private Item lastMainHandItem = null; // Stores what item was in the main hand last tick
 	private int lastMainHandCount = 0; // Stores how many of that item were in the stack last tick
-	private boolean lastMainHandCrossbowWasLoaded = false; // Stores whether the crossbow was loaded last tick
+	private boolean crossbowLoadedLastTick = false; // Stores whether the crossbow was loaded last tick
 
 	// Check if we need to block the offhand this tick
     @Inject(
@@ -57,9 +57,9 @@ public class OffhandUseMixin {
 			&& (currentItem != lastMainHandItem || currentCount < lastMainHandCount);
 		
         if (isUsingMainHand || instantUseDetected) { // If either type of main hand use was detected, block the offhand
-            blockOffhandUntilRelease = true;
+            blockOffhandUse = true;
         } else if (!rightMouseHeld) { // Otherwise, as long as the right mouse button is not currently being pressed, clear the flag
-            blockOffhandUntilRelease = false;
+            blockOffhandUse = false;
 			// This ensures if the player keeps the right mouse button held after completing their main hand use, it does not activate the offhand use.
         }
 
@@ -77,15 +77,15 @@ public class OffhandUseMixin {
 		// And is the right mouse button currently being held
 		// True if all three are satisfied.
 		// Essentially, has the crossbow been fired this tick, and is the player still holding the right mouse button?
-		boolean crossbowJustFired = lastMainHandCrossbowWasLoaded 
+		boolean crossbowJustFired = crossbowLoadedLastTick 
 			&& !currentCrossbowLoaded
 			&& rightMouseHeld;
 		
 		if (crossbowJustFired) { // If the crossbow has just been fired, block the offhand
-			blockOffhandUntilRelease = true;
+			blockOffhandUse = true;
 		}
 
-		lastMainHandCrossbowWasLoaded = currentCrossbowLoaded; // Save this tick's crossbow state
+		crossbowLoadedLastTick = currentCrossbowLoaded; // Save this tick's crossbow state
     }
 
 	// Tell Minecraft we need to block the offhand while consuming if necessary
@@ -101,7 +101,7 @@ public class OffhandUseMixin {
     ) {
         if (hand != InteractionHand.OFF_HAND) return; // If the hand that triggered this isn't the offhand, don't cancel.
 
-        if (blockOffhandUntilRelease) { // If we need to block the offhand, pass this to Minecraft
+        if (blockOffhandUse) { // If we need to block the offhand, pass this to Minecraft
             cir.setReturnValue(InteractionResult.PASS);
         }
     }
@@ -120,7 +120,7 @@ public class OffhandUseMixin {
 	) {
 		if (hand != InteractionHand.OFF_HAND) return; // If the hand that triggered this isn't the offhand, don't cancel.
 
-		if (blockOffhandUntilRelease) { // If we need to block the offhand, pass this to Minecraft
+		if (blockOffhandUse) { // If we need to block the offhand, pass this to Minecraft
 			cir.setReturnValue(InteractionResult.PASS);
 		}
 	}
