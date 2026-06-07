@@ -14,7 +14,7 @@ Known limitations:
 - Instant use items detection (e.g. throwing the last snowball in a stack) relies on the stack size changing. If a mod adds an instant-use item that doesn't reduce stack size, it may not be caught.
 
 ## About
-This is my first Minecraft mod made, and for use on the [Immortal MC server](https://www.immortalmc.net/) where we have a fully generated voxy file that I love using the spyglass with (in my offhand). If you're looking for a small, tight-nit, vanilla survival (with a couple pluigns) come check us out!
+This is my first Minecraft mod I've ever made, which was initially just personal for use on the [Immortal MC server](https://www.immortalmc.net/) where we have a fully generated voxy file that I love using the spyglass with (in my offhand). If you're looking for a small, tight-nit, vanilla survival (with a couple pluigns) come check us out!
 
 For full disclosure, a self-hosted AI model was used to assist in developing this, since I've never created one before and just wanted a simple fix for a tiny issue I was having, and I found nobody has been maintaining the mods I wanted to use. I tried to do as much coding as I could myself but most of my coding knowledge is in Python and Java is a big jump lol. Since this AI model was self-hosted on my own GPU no lakes were drained 🙂, it just made my PC going brr which drew about as much wattage as Cities: Skylines II normally does, maybe less lol.
 
