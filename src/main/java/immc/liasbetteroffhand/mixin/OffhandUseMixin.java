@@ -144,8 +144,8 @@ public class OffhandUseMixin {
 				|| player.getMainHandItem().is(net.minecraft.tags.ItemTags.SHOVELS)
 				|| player.getMainHandItem().is(net.minecraft.tags.ItemTags.HOES)
 				|| player.getMainHandItem().is(net.minecraft.world.item.Items.SHEARS)
-				|| player.getMainHandItem().is(net.minecraft.world.item.Items.FLINT_AND_STEEL))
-				|| player.getMainHandItem().is(net.minecraft.world.item.Items.BONE_MEAL)
+				|| player.getMainHandItem().is(net.minecraft.world.item.Items.FLINT_AND_STEEL)
+				|| player.getMainHandItem().is(net.minecraft.world.item.Items.BONE_MEAL))
 				&& !(player.getOffhandItem().getItem() instanceof net.minecraft.world.item.ShieldItem)) {
 			mainHandUseItemOnThisTick = true;
 			blockOffhandUse = true; // Set blockOffHandUse to true to ensure that the offhand can't be used until right click is let go
@@ -172,8 +172,7 @@ public class OffhandUseMixin {
 		//System.out.println("Entity interact result: " + result);
 
 		// If the interaction was succesful and had an outcome, block the offhand
-		if (result != null && (result == InteractionResult.SUCCESS
-				|| result.consumesAction())) {
+		if (result != null && result.consumesAction()) {
 			mainHandEntityInterThisTick = true;
 			blockOffhandUse = true;
 
