@@ -118,11 +118,17 @@ public class OffhandUseMixin {
 				|| result == InteractionResult.CONSUME)) { 
 			mainHandUseItemOnThisTick = true;
 		}
-		// Completely disable offhand if the item used was bone meal
-		// Since bone meal success is handeled server side, the client will try and trigger the offhand in the same tick
-		// So this check disables the offhand regardless of if the bone meal was actually used or not
-		if (player.getMainHandItem().is(net.minecraft.world.item.Items.BONE_MEAL)) {
+		// A catch to disable offhand if the item used was a utility item
+		// Since the success of using bone meal use, axe log stripping, etc is handeled server side, the client will try and trigger the offhand in the same tick
+		// So this check disables the offhand regardless of if the item was actually used or not
+		// However don't do this if the offhand item is a shield, as it inteferes with vanilla behaviour and disables all right click functionality
+		if ((player.getMainHandItem().is(net.minecraft.tags.ItemTags.AXES)
+				|| player.getMainHandItem().is(net.minecraft.tags.ItemTags.SHOVELS)
+				|| player.getMainHandItem().is(net.minecraft.tags.ItemTags.HOES)
+				|| player.getMainHandItem().is(net.minecraft.world.item.Items.BONE_MEAL))
+				&& !(player.getOffhandItem().getItem() instanceof net.minecraft.world.item.ShieldItem)) {
 			mainHandUseItemOnThisTick = true;
+			blockOffhandUse = true; // Set blockOffHandUse to true to ensure that the offhand can't be used until right click is let go
 		}
 	}
 
