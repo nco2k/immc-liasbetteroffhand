@@ -25,6 +25,7 @@ public class OffhandUseMixin {
 	private int lastMainHandCount = 0; // Stores how many of that item were in the stack last tick
 	private boolean crossbowLoadedLastTick = false; // Stores whether the crossbow was loaded last tick
 	private boolean mainHandUseItemOnThisTick = false; // Stores whether the main hand has used an item on a block this tick
+	private boolean mainHandEntityInterThisTick = false; // Stores whether the main hand has interacted with an entity this tick
 
 	// Check if we need to block the offhand this tick
     @Inject(
@@ -59,7 +60,7 @@ public class OffhandUseMixin {
 			&& lastMainHandItem != null
 			&& (currentItem != lastMainHandItem || currentCount < lastMainHandCount);
 		
-        if (isUsingMainHand || instantUseDetected) { // If either type of main hand use was detected, block the offhand
+        if (isUsingMainHand || instantUseDetected || mainHandEntityInterThisTick) { // If any type of main hand use was detected, block the offhand
             blockOffhandUse = true;
         } else if (!rightMouseHeld) { // Otherwise, as long as the right mouse button is not currently being pressed, clear the flag
             blockOffhandUse = false;
@@ -90,7 +91,9 @@ public class OffhandUseMixin {
 
 		crossbowLoadedLastTick = currentCrossbowLoaded; // Save this tick's crossbow state
 
-		mainHandUseItemOnThisTick = false; // Reset to false every tick since we determine whether it's true or not each tick, and should assume false until checked.
+		// Reset to false every tick since we determine whether these are true or not each tick, and should be assumed false until checked.
+		mainHandUseItemOnThisTick = false; 
+		mainHandEntityInterThisTick = false;
     }
 
 	// +----------------------------------------------+
@@ -108,8 +111,8 @@ public class OffhandUseMixin {
 	) {
 		if (hand != InteractionHand.MAIN_HAND) return;
 
+		//System.out.println("Main hand useItemOn TAIL fired, item: " + player.getMainHandItem().getItem());
 		//System.out.println("Main hand result: " + cir.getReturnValue());
-		//System.out.println("Main hand useItemOn TAIL fired");
 
 		InteractionResult result = cir.getReturnValue(); // Grab the interaction result
 
@@ -118,6 +121,21 @@ public class OffhandUseMixin {
 				|| result == InteractionResult.CONSUME)) { 
 			mainHandUseItemOnThisTick = true;
 		}
+
+		// If the player has leashed animals, a block interaction is likely attaching a lead to a fence post
+		boolean clickingFencePost = player.level().getBlockState(hitResult.getBlockPos())
+			.is(net.minecraft.tags.BlockTags.FENCES);
+		boolean hasLeashedEntities = player.level().getEntitiesOfClass(
+			net.minecraft.world.entity.Mob.class,
+			player.getBoundingBox().inflate(10),
+			mob -> mob.getLeashHolder() == player
+		).size() > 0;
+
+		if (clickingFencePost && hasLeashedEntities) {
+			mainHandUseItemOnThisTick = true;
+			blockOffhandUse = true;
+		}
+
 		// A catch to disable offhand if the item used was a utility item
 		// Since the success of using bone meal use, axe log stripping, etc is handeled server side, the client will try and trigger the offhand in the same tick
 		// So this check disables the offhand regardless of if the item was actually used or not
@@ -134,6 +152,37 @@ public class OffhandUseMixin {
 		}
 	}
 
+	// When the main hand interacts with an entity, check the interaction and determine whether to block the offhand
+	@Inject(
+		method = "interact",
+		at = @At("TAIL")
+	)
+	private void checkMainHandEntityInter(
+		net.minecraft.world.entity.player.Player player,
+		net.minecraft.world.entity.Entity entity,
+		net.minecraft.world.phys.EntityHitResult hitResult,
+		InteractionHand hand,
+		CallbackInfoReturnable<InteractionResult> cir
+	) {
+		if (hand != InteractionHand.MAIN_HAND) return;
+
+		InteractionResult result = cir.getReturnValue(); // Grab the interaction result
+		
+		//System.out.println("Entity interact TAIL fired with hand: " + hand);
+		//System.out.println("Entity interact result: " + result);
+
+		// If the interaction was succesful and had an outcome, block the offhand
+		if (result != null && (result == InteractionResult.SUCCESS
+				|| result.consumesAction())) {
+			mainHandEntityInterThisTick = true;
+			blockOffhandUse = true;
+
+			//System.out.println("mainHandEntityInterThisTick set to true");
+		}
+	}
+
+	// +----------------------------------------------+
+
 	// Tell Minecraft we need to block the offhand while the main hand is using an item, if necessary
     @Inject(
         method = "useItem",
@@ -149,7 +198,7 @@ public class OffhandUseMixin {
 
 		//System.out.println("Offhand useItem HEAD fired, blockOffhandUse: " + blockOffhandUse);
 
-        if (blockOffhandUse || mainHandUseItemOnThisTick) { // If we need to block the offhand, pass this to Minecraft
+        if (blockOffhandUse || mainHandUseItemOnThisTick || mainHandEntityInterThisTick) { // If we need to block the offhand, pass this to Minecraft
 			cir.setReturnValue(InteractionResult.PASS);
 		}
     }
@@ -171,7 +220,7 @@ public class OffhandUseMixin {
 		//System.out.println("Offhand useItemOn HEAD fired, mainHandUsedOnBlock: " + mainHandUseItemOnThisTick);
 		//System.out.println("Offhand block check - blockOffhandUse: " + blockOffhandUse + " | mainHandUsedOnBlock: " + mainHandUseItemOnThisTick);
 
-		if (blockOffhandUse || mainHandUseItemOnThisTick) { // If we need to block the offhand, pass this to Minecraft
+		if (blockOffhandUse || mainHandUseItemOnThisTick || mainHandEntityInterThisTick) { // If we need to block the offhand, pass this to Minecraft
 			cir.setReturnValue(InteractionResult.PASS);
 		}
 	}
