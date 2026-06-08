@@ -1,17 +1,27 @@
 # Lia's Better Offhand
 A client-side Fabric mod for Minecraft 26.1.2 that prevents accidental offhand item activation while using your main hand.
+
 ## What it does
 Ever been eating food and then suddenly half a stack of fireworks has hit the cieling? Or suddenly zoomed in with your spyglass? Or perhaps you were throwing snowballs at a friend and didn't appreciate throwing your shield up when you ran out?
 
 In vanilla, if you hold right click to use an item in your main hand, like eating food, the offhand item will activate as soon as the main hand action completes, even if you're still holding the button down. This mod blocks the offhand from activating until you release and re-press right click.
 
 This applies to:
-- **Hold right click items:** food, potions, crossbows, shields, spyglass, trident, spear, goat horn, and any other item with a use animation
-- **Instant use items:** snowballs, eggs, ender pearls, splash potions, fireworks, and any other item that consumes from a stack on use
-- **Any items that break while being used**
+- **Hold right click items:** food, potions, bows, crossbows, shields, spyglass, trident, spear, goat horn, and any other item with a use animation
+- **Instant use stackables:** snowballs, eggs, ender pearls, splash potions, fireworks, and any other item that consumes from a stack on use
+- **Items breaking while used**
+- **Crossbow firing**
+- **Tools and utility items used on blocks:** axes (stripping/scraping/dewaxing), shovels, hoes, bonemeal, shears, flint and steel
+- **Leads:** attaching to fence posts, picking up from fence posts, attaching to animals, removing from animals
+- **Entity interactions:** shearing sheep, applying/removing saddles, any other successful entity interaction
 
 Known limitations:
-- Instant use items detection (e.g. throwing the last snowball in a stack) relies on the stack size changing. If a mod adds an instant-use item that doesn't reduce stack size, it may not be caught.
+- Instant use items detection (e.g. throwing the last snowball in a stack) rely on the stack size changing, or specific item names and types. If a mod adds an instant-use item that doesn't reduce stack size, or isn't in the type list, it may not be caught.
+
+## Dependencies
+[![Fabric API](https://img.shields.io/badge/Fabric%20API-required-orange)](https://modrinth.com/mod/fabric-api)
+[![Cloth Config](https://img.shields.io/badge/Cloth%20Config-required-orange)](https://modrinth.com/mod/cloth-config)
+[![Mod Menu](https://img.shields.io/badge/Mod%20Menu-optional-blue)](https://modrinth.com/mod/modmenu)
 
 ## About
 This is the first Minecraft mod I've ever made, which was initially just for personal use on the [Immortal MC server](https://www.immortalmc.net/) where we have a fully generated [voxy](https://modrinth.com/mod/voxy) file that I love using the spyglass with (in my offhand). If you're looking for a small, tight-knit, vanilla survival (with a couple pluigns) come check us out!
