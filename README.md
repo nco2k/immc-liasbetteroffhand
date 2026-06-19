@@ -2,7 +2,7 @@
 [![Cloth Config](https://img.shields.io/badge/Cloth%20Config-required-orange)](https://modrinth.com/mod/cloth-config)
 [![Mod Menu](https://img.shields.io/badge/Mod%20Menu-optional-blue)](https://modrinth.com/mod/modmenu)
 # Lia's Better Offhand
-A client-side Fabric mod for Minecraft 26.1.2 that prevents accidental offhand item activation while using your main hand.
+A client-side Fabric mod that prevents accidental offhand item activation while using your main hand.
 
 ## What it does
 Ever been eating food and then suddenly half a stack of fireworks has hit the cieling? Or suddenly zoomed in with your spyglass? Or perhaps you were throwing snowballs at a friend and didn't appreciate throwing your shield up when you ran out?
